@@ -43,6 +43,10 @@ const useTreeViewSelect = (
         return onFilterChange?.(TEXT_FILTER_LABELS_ID, {
           all: [`${VM_FOLDER_LABEL}=${treeItemName}`],
         });
+      } else {
+        return onFilterChange?.(TEXT_FILTER_LABELS_ID, {
+          all: [],
+        });
       }
     },
     [navigate, onFilterChange, setOrRemoveQueryArgument],
