@@ -1,11 +1,13 @@
 import { EncodedExtension } from '@openshift/dynamic-plugin-sdk-webpack';
 import { FeatureFlag, RoutePage, StandaloneRoutePage } from '@openshift-console/dynamic-plugin-sdk';
 import type { ConsolePluginBuildMetadata } from '@openshift-console/dynamic-plugin-sdk-webpack';
+import { ResourceRoute } from '@stolostron/multicluster-sdk';
 
 export const exposedModules: ConsolePluginBuildMetadata['exposedModules'] = {
   acmFlags: './multicluster/flags.ts',
   ConsoleStandAlone: './utils/components/Consoles/ConsoleStandAlone.tsx',
   Navigator: './views/virtualmachines/navigator/VirtualMachineNavigator.tsx',
+  urls: './multicluster/urls.ts',
   VirtualMachineSearchResults: './views/virtualmachines/search/VirtualMachineSearchResults.tsx',
 };
 
@@ -52,4 +54,24 @@ export const extensions: EncodedExtension[] = [
     },
     type: 'console.flag',
   } as EncodedExtension<FeatureFlag>,
+  {
+    properties: {
+      handler: { $codeRef: 'urls.getFleetResourceRoute' },
+      model: {
+        group: 'kubevirt.io',
+        kind: 'VirtualMachine',
+      },
+    },
+    type: 'acm.resource/route',
+  } as EncodedExtension<ResourceRoute>,
+  {
+    properties: {
+      handler: { $codeRef: 'urls.getFleetResourceRoute' },
+      model: {
+        group: 'kubevirt.io',
+        kind: 'VirtualMachineInstance',
+      },
+    },
+    type: 'acm.resource/route',
+  } as EncodedExtension<ResourceRoute>,
 ];
