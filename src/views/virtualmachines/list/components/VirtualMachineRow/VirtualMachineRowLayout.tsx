@@ -16,8 +16,9 @@ import { isEmpty } from '@kubevirt-utils/utils/utils';
 import ACMExtentionsTableData from '@multicluster/components/ACMExtentionsTableData';
 import { ManagedClusterModel } from '@multicluster/constants';
 import { getCluster } from '@multicluster/helpers/selectors';
-import { ResourceLink, RowProps, TableData } from '@openshift-console/dynamic-plugin-sdk';
+import { RowProps, TableData } from '@openshift-console/dynamic-plugin-sdk';
 import { Checkbox } from '@patternfly/react-core';
+import { FleetResourceLink } from '@stolostron/multicluster-sdk';
 import VirtualMachineActions from '@virtualmachines/actions/components/VirtualMachineActions/VirtualMachineActions';
 import useVirtualMachineActionsProvider from '@virtualmachines/actions/hooks/useVirtualMachineActionsProvider';
 import { getDeletionProtectionPrintableStatus } from '@virtualmachines/details/tabs/configuration/details/components/DeletionProtection/utils/utils';
@@ -76,21 +77,22 @@ const VirtualMachineRowLayout: FC<
         />
       </TableData>
       <TableData activeColumnIDs={activeColumnIDs} className="pf-m-width-20 vm-column" id="name">
-        <ResourceLink
+        <FleetResourceLink
+          cluster={vmCluster}
           groupVersionKind={VirtualMachineModelGroupVersionKind}
           name={vmName}
           namespace={vmNamespace}
         />
       </TableData>
       <TableData activeColumnIDs={activeColumnIDs} className="vm-column" id="cluster">
-        <ResourceLink
+        <FleetResourceLink
           groupVersionKind={modelToGroupVersionKind(ManagedClusterModel)}
           name={vmCluster}
           truncate
         />
       </TableData>
       <TableData activeColumnIDs={activeColumnIDs} className="vm-column" id="namespace">
-        <ResourceLink kind="Namespace" name={vmNamespace} truncate />
+        <FleetResourceLink cluster={vmCluster} kind="Namespace" name={vmNamespace} truncate />
       </TableData>
       <TableData activeColumnIDs={activeColumnIDs} className="vm-column" id="status">
         {status}
@@ -123,7 +125,8 @@ const VirtualMachineRowLayout: FC<
         {isEmpty(storageClasses)
           ? NO_DATA_DASH
           : storageClasses.map((storageClass) => (
-              <ResourceLink
+              <FleetResourceLink
+                cluster={vmCluster}
                 groupVersionKind={modelToGroupVersionKind(StorageClassModel)}
                 key={storageClass}
                 name={storageClass}
